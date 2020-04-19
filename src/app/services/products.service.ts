@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
 import { Product } from "app/models/product.model";
 import "rxjs/add/operator/map";
 import { Observable } from "rxjs/Observable";
 import { CachcingServiceBase } from "./caching.service";
+import { Http } from "@angular/http";
 
 let count = 0;
 
@@ -11,7 +11,7 @@ let count = 0;
 export class ProductsDataService extends CachcingServiceBase {
   private products: Observable<Product[]>;
 
-  public constructor(private http: Http) {
+  public constructor(public http: Http) {
     super();
   }
 
@@ -19,7 +19,7 @@ export class ProductsDataService extends CachcingServiceBase {
     return this.cache<Product[]>(() => this.products,
                                  (val: Observable<Product[]>) => this.products = val,
                                  () => this.http
-                                           .get("./assets/products.json")
+                                           .get("./assets/products.json").pipe()
                                            .map((response) => response.json()
                                                                       .map((item) => {
                                                                         let model = new Product();
